@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "lib": ["es2020"],
+    "target": "es2015",
+    "module": "esnext",
+    "moduleResolution": "node",
+    "strict": true,
+    "stripInternal": true,
+    "jsx": "react-jsx",
+    "forceConsistentCasingInFileNames": true,
+    "allowSyntheticDefaultImports": true,
+    "resolveJsonModule": true,
+    "sourceMap": true,
+    "skipLibCheck": true
+  }
+}
