@@ -24,7 +24,7 @@ export function findCurrentPackageJsonPath(
   const packageJSONPath = path.join(directory, 'package.json');
   try {
     fs.accessSync(packageJSONPath, fs.constants.F_OK);
-    const packageJSON = require(packageJSONPath);
+    const packageJSON = __non_webpack_require__(packageJSONPath);
     if (!packageJSON.workspaces) {
       return packageJSONPath;
     } else {
@@ -45,7 +45,9 @@ export function findCurrentPackageDependencies(
   dependencies: string[];
 } {
   const packageJsonPath = findCurrentPackageJsonPath(directory);
-  const packageJson: MinimalPackageJSON = require(packageJsonPath);
+  const packageJson: MinimalPackageJSON = __non_webpack_require__(
+    packageJsonPath
+  );
   const allDependencies = getWorkspaceInfo();
   const info = allDependencies[packageJson.name];
   return {

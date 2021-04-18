@@ -55,7 +55,7 @@ function findRootPackageJsonPath(directory: string = __dirname): string {
   try {
     fs.accessSync(packageJSONPath, fs.constants.F_OK);
 
-    const packageJSON = require(packageJSONPath);
+    const packageJSON = __non_webpack_require__(packageJSONPath);
     if (!packageJSON.workspaces) {
       // not a root package.json
       return findRootPackageJsonPath(path.dirname(directory));
@@ -77,7 +77,7 @@ export function findRootPackageJson(
 ): MinimalPackageJSON {
   const packageJsonPath = findRootPackageJsonPath(directory);
 
-  return require(packageJsonPath);
+  return __non_webpack_require__(packageJsonPath);
 }
 
 export function resolveWorkspaces(
