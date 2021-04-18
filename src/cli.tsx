@@ -1,4 +1,3 @@
-#!/usr/bin/env node
 import { Cli, Builtins } from 'clipanion';
 import { BuildCommand } from './commands/BuildCommand';
 import { CreateCommand } from './commands/CreateCommand';
