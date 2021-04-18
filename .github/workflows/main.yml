@@ -23,12 +23,9 @@ jobs:
         run: yarn build
 
       - name: Version
-        run: npm version prerelease --preid="dev"
+        run: npm version --git-tag-version=false prerelease --preid="dev"
 
       - uses: JS-DevTools/npm-publish@v1
         with:
           token: ${{ secrets.NPM_TOKEN }}
           tag: dev
-
-      - name: Update Version in Git
-        run: git push
