@@ -22,10 +22,18 @@ jobs:
       - name: Build
         run: yarn build
 
+      - name: Config Git Name and Email
+        run: |
+          git config user.name "Zhongliang Wang"
+          git config user.email "zwang@rebelworks.io"
+
       - name: Version
-        run: npm version --git-tag-version=false prerelease --preid="dev"
+        run: npm version prerelease --preid="dev"
 
       - uses: JS-DevTools/npm-publish@v1
         with:
           token: ${{ secrets.NPM_TOKEN }}
           tag: dev
+
+      - name: Push Version Bump
+        run: git push
