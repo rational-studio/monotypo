@@ -7,7 +7,8 @@
   "author": "Zhongliang Wang <zwang@rebelworks.io>",
   "license": "MIT",
   "scripts": {
-    "dev": "tsc -p tsconfig.json -w"
+    "dev": "tsc -p tsconfig.json -w",
+    "build": "tsc -p tsconfig.json"
   },
   "bin": {
     "m": "./dist/cli.js"
