@@ -7,14 +7,13 @@ import { DoctorCommand } from './commands/DoctorCommand';
 import { InitCommand } from './commands/InitCommand';
 import { LintCommand } from './commands/LintCommand';
 import { TestCommand } from './commands/TestCommand';
-import * as packageJson from '../package.json';
 
 const [, , ...args] = process.argv;
 
 const cli = new Cli({
   binaryLabel: 'Monotypo',
   binaryName: 'm',
-  binaryVersion: packageJson.version,
+  binaryVersion: require('../package.json').version,
 });
 
 cli.register(Builtins.DefinitionsCommand);
