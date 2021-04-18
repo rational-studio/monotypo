@@ -24,12 +24,6 @@
     "@types/react": "^17.0.3",
     "@types/tinycolor2": "^1.4.2"
   },
-  "files": [
-    "assets",
-    "dist",
-    "config",
-    "README.md"
-  ],
   "dependencies": {
     "@rushstack/package-deps-hash": "^3.0.20",
     "@swc/core": "^1.2.52",
