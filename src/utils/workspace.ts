@@ -1,6 +1,7 @@
 import * as path from 'path';
 import * as fs from 'fs-extra';
 import * as glob from 'glob';
+import * as process from 'process';
 import {
   findMonorepoRoot,
   findRootPackageJson,
@@ -62,7 +63,7 @@ export function findCurrentPackageDependencies(
 }
 
 export function getWorkspacesSync(
-  baseDirectory: string = __dirname
+  baseDirectory: string = process.cwd()
 ): readonly string[] {
   // used only in `.jest.config.js` where it's not possible to be async
   const rootPackageJSON = findRootPackageJson(baseDirectory);

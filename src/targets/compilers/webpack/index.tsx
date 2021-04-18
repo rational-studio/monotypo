@@ -8,6 +8,7 @@ import * as path from 'path';
 import { pluginManager } from '../../../utils/pluginManager';
 import * as HtmlWebpackPlugin from 'html-webpack-plugin';
 import { BuildMode } from '../../../utils/typings';
+import * as process from 'process';
 
 const { inspect } = require('util');
 
@@ -20,7 +21,7 @@ export function initWebpackCompiler(
   const initialConfig: Configuration = {
     mode,
     stats: 'errors-warnings',
-    context: findRoot(__dirname),
+    context: findRoot(process.cwd()),
     entry,
     output: {
       path: project.distributionDir,

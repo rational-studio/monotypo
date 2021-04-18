@@ -1,6 +1,7 @@
 import * as crossSpawn from 'cross-spawn';
 import * as path from 'path';
 import * as fs from 'fs-extra';
+import * as process from 'process';
 import type { MinimalPackageJSON } from '../typings';
 
 let memoizedRootJsonPath: string | null = null;
@@ -41,7 +42,7 @@ export function getWorkspaceInfo() {
   return sanitizeStdout();
 }
 
-function findRootPackageJsonPath(directory: string = __dirname): string {
+function findRootPackageJsonPath(directory: string = process.cwd()): string {
   if (memoizedRootJsonPath !== null) {
     return memoizedRootJsonPath;
   }
@@ -68,12 +69,12 @@ function findRootPackageJsonPath(directory: string = __dirname): string {
   }
 }
 
-export function findMonorepoRoot(directory: string = __dirname): string {
+export function findMonorepoRoot(directory: string = process.cwd()): string {
   return path.dirname(findRootPackageJsonPath(directory));
 }
 
 export function findRootPackageJson(
-  directory: string = __dirname
+  directory: string = process.cwd()
 ): MinimalPackageJSON {
   const packageJsonPath = findRootPackageJsonPath(directory);
 
