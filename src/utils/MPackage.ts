@@ -9,6 +9,20 @@ import { InferType } from 'typanion';
 import { CompilationDiagnostic } from './typings';
 
 const M_CACHE_FOLDER = '.m';
+
+/* 
+  Since this tool combines monorepo management AND TypeScript support. By default, everything would be assumed as TypeScript files.
+  Therefore TypeScript compilation is the mandatory first step, this folder stores the intermediate distribution (InterDist) files.
+
+  This compilation can be done either in `swc` or `tsc`.
+
+  The strategies for other targets:
+  
+  - library -> simply copy InterDist to actual dist folder
+  - webpack -> by default, it just bundles InterDist with Webpack, no Babel or TypeScript preprocessing nor SCSS/Preprocessing
+*/
+const M_CACHE_TYPESCRIPT_INTER_DIST = '.typeInterDist';
+
 const DEP_HASH_FILE = 'dep-hash.json';
 const M_CONFIG_FILE = 'm.config.json';
 
@@ -28,7 +42,8 @@ interface GlobalSettings {
 
 export class MPackage implements GraphNode {
   private _name: string;
-  private _folder: string;
+  private _packageFolder: string;
+  private _interDistFolder: string;
   private _packageJsonLocation: string;
   private _mTempFolder: string;
   private _depHashLocation: string;
@@ -40,7 +55,7 @@ export class MPackage implements GraphNode {
 
   constructor(packageName: string, packageFolder: string) {
     this._name = packageName;
-    this._folder = path.resolve(workspaceRoot, packageFolder);
+    this._packageFolder = path.resolve(workspaceRoot, packageFolder);
     this._packageJsonLocation = path.resolve(
       workspaceRoot,
       packageFolder,
@@ -50,6 +65,10 @@ export class MPackage implements GraphNode {
       workspaceRoot,
       packageFolder,
       M_CACHE_FOLDER
+    );
+    this._interDistFolder = path.join(
+      this._mTempFolder,
+      M_CACHE_TYPESCRIPT_INTER_DIST
     );
     this._depHashLocation = path.resolve(this._mTempFolder, DEP_HASH_FILE);
     this._mConfigLocation = path.resolve(
@@ -71,10 +90,13 @@ export class MPackage implements GraphNode {
     return this._mConfigLocation;
   }
   public get sourceDir() {
-    return path.join(this._folder, SOURCE_DIR);
+    return path.join(this._packageFolder, SOURCE_DIR);
   }
   public get distributionDir() {
-    return path.join(this._folder, DIST_DIR);
+    return path.join(this._packageFolder, DIST_DIR);
+  }
+  public get interDistDir() {
+    return this._interDistFolder;
   }
   public get isMConfigExisted() {
     try {
@@ -104,7 +126,7 @@ export class MPackage implements GraphNode {
     }
   }
   private getDepHash() {
-    const depHash = getPackageDeps(this._folder);
+    const depHash = getPackageDeps(this._packageFolder);
     const depHashArray = Array.from(depHash.entries());
     return JSON.stringify(depHashArray);
   }
