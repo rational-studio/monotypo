@@ -1,5 +1,5 @@
 import { isMainThread, parentPort, workerData } from 'worker_threads';
-import { BuildMode } from '../../../utils/typings';
+import { BuildMode } from '../../utils/typings';
 import * as glob from 'glob';
 import * as path from 'path';
 import * as ts from 'typescript';

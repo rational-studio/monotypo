@@ -3,6 +3,5 @@ import { BuildMode, Compiler } from '../utils/typings';
 
 export interface Target {
   name: string;
-  compilerUsed: readonly Compiler[];
   build(project: MPackage, mode: BuildMode): Promise<void>;
 }

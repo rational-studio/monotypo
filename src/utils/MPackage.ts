@@ -7,6 +7,7 @@ import { pluginManager } from './pluginManager';
 import { isValidMConfig } from '../schema/mConfig';
 import { InferType } from 'typanion';
 import { CompilationDiagnostic } from './typings';
+import { buildInterDist } from './interDist';
 
 const M_CACHE_FOLDER = '.m';
 
@@ -19,7 +20,7 @@ const M_CACHE_FOLDER = '.m';
   The strategies for other targets:
   
   - library -> simply copy InterDist to actual dist folder
-  - webpack -> by default, it just bundles InterDist with Webpack, no Babel or TypeScript preprocessing nor SCSS/Preprocessing
+  - web -> by default, it just bundles InterDist with Webpack, no Babel or TypeScript preprocessing nor SCSS/Preprocessing
 */
 const M_CACHE_TYPESCRIPT_INTER_DIST = '.typeInterDist';
 
@@ -95,6 +96,11 @@ export class MPackage implements GraphNode {
   public get distributionDir() {
     return path.join(this._packageFolder, DIST_DIR);
   }
+  /**
+   * @description
+   * Since this tool combines monorepo management AND TypeScript support. By default, everything would be assumed as TypeScript files.
+   * Therefore TypeScript compilation is the mandatory first step, this folder stores the intermediate distribution (InterDist) files.
+   */
   public get interDistDir() {
     return this._interDistFolder;
   }
@@ -166,9 +172,16 @@ export class MPackage implements GraphNode {
     if (!this._cachedValidMConfig) {
       console.assert(this.isMConfigValid);
     }
+    /**
+     * The build steps:
+     * BuildInterDist -> Resolve Targets -> Call `Build` on Targets
+     */
+    await buildInterDist(this, 'development');
+
     const buildTarget = pluginManager.resolveTarget(
       this._cachedValidMConfig!.target
     );
+
     await buildTarget.build(this, 'development');
   }
 }

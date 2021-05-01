@@ -1,5 +1,5 @@
-import { MPackage } from '../../../utils/MPackage';
-import { BuildMode } from '../../../utils/typings';
+import { MPackage } from '../../utils/MPackage';
+import { BuildMode } from '../../utils/typings';
 import { inspect } from 'util';
 import { Worker } from 'worker_threads';
 

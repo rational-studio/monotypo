@@ -1,7 +1,7 @@
 import path from 'path';
 import * as swc from '@swc/core';
 import * as fs from 'fs-extra';
-import { MPackage } from '../../../utils/MPackage';
+import { MPackage } from '../../utils/MPackage';
 
 export async function swcCompiler(filePath: string, project: MPackage) {
   const { code, map } = await swc.transformFile(filePath, {

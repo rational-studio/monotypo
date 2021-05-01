@@ -3,11 +3,11 @@ import MiniCssExtractPlugin = require('mini-css-extract-plugin');
 import * as webpack from 'webpack';
 import type { Configuration } from 'webpack';
 import { merge } from 'webpack-merge';
-import { MPackage } from '../../../utils/MPackage';
+import { MPackage } from '../../utils/MPackage';
 import * as path from 'path';
-import { pluginManager } from '../../../utils/pluginManager';
+import { pluginManager } from '../../utils/pluginManager';
 import * as HtmlWebpackPlugin from 'html-webpack-plugin';
-import { BuildMode } from '../../../utils/typings';
+import { BuildMode } from '../../utils/typings';
 import * as process from 'process';
 
 const { inspect } = require('util');
@@ -47,6 +47,7 @@ export function initWebpackCompiler(
       ],
     },
     plugins: [
+      // @ts-expect-error typings in MiniCSS has conflicts with the latest Webpack one
       new MiniCssExtractPlugin({
         filename: '[name].[contenthash].css',
         chunkFilename: '[id].[contenthash].css',
