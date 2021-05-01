@@ -15,6 +15,7 @@ export function tscCompiler(
         projectTempFolder: project.projectTempFolder,
         mode,
         outDir,
+        config: project.mConfiguration,
       },
     });
     worker.once('message', message => {

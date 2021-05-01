@@ -32,7 +32,7 @@ const DIST_DIR = 'lib';
 
 const workspaceRoot = findMonorepoRoot();
 
-type ValidMConfig = InferType<typeof isValidMConfig>;
+export type ValidMConfig = InferType<typeof isValidMConfig>;
 
 interface GlobalSettings {
   watch: {
@@ -159,6 +159,15 @@ export class MPackage implements GraphNode {
   public async updateDepHash() {
     await fs.ensureFile(this._depHashLocation);
     await fs.writeFile(this._depHashLocation, this.getDepHash());
+  }
+
+  public get mConfiguration() {
+    if (this._cachedValidMConfig) {
+      return this._cachedValidMConfig;
+    }
+    throw new Error(
+      'Configuration m.config.json does not exist or is not valid.'
+    );
   }
 
   public async clean() {

@@ -3,8 +3,9 @@ import { BuildMode } from '../../utils/typings';
 import * as glob from 'glob';
 import * as path from 'path';
 import * as ts from 'typescript';
-import { dev, prod } from './configs';
+import { getDevConfig, getProdConfig } from './configs';
 import * as util from 'util';
+import { ValidMConfig } from '../../utils/MPackage';
 
 const INCREMENTAL_CACHE_FILE = 'tsbuild.json';
 
@@ -13,35 +14,40 @@ if (isMainThread) {
     'TypeScript compiler is not supposed to run on the main thread.'
   );
 } else {
-  const { projectSourceDir, projectTempFolder, mode, outDir } = workerData as {
+  const {
+    projectSourceDir,
+    projectTempFolder,
+    mode,
+    outDir,
+    config,
+  } = workerData as {
     projectSourceDir: string;
     projectTempFolder: string;
     mode: BuildMode;
     outDir: string;
+    config: ValidMConfig;
   };
 
+  const isDevMode = mode === 'development';
+
   glob(path.join(projectSourceDir, '**', '*.{ts,tsx}'), (err, files) => {
-    const tsConfig = mode === 'development' ? dev : prod;
+    const tsconfigFunction = isDevMode ? getDevConfig : getProdConfig;
 
     const compilerHost = ts.createCompilerHost({
-      ...tsConfig,
+      ...tsconfigFunction(config),
       noEmitOnError: true,
       sourceRoot: projectSourceDir,
     });
 
-    const originalGetSourceFile = compilerHost.getSourceFile;
-    compilerHost.getSourceFile = (fileName, ...args) => {
-      // console.log(fileName);
-      return originalGetSourceFile.call(compilerHost, fileName, ...args);
-    };
-
     const program = ts.createProgram({
       rootNames: files,
       options: {
-        ...tsConfig,
+        ...tsconfigFunction(config),
         noEmitOnError: true,
         outDir,
-        tsBuildInfoFile: path.join(projectTempFolder, INCREMENTAL_CACHE_FILE),
+        tsBuildInfoFile: isDevMode
+          ? path.join(projectTempFolder, INCREMENTAL_CACHE_FILE)
+          : undefined,
       },
       host: compilerHost,
     });

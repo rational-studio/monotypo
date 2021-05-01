@@ -5,17 +5,17 @@ import {
   ModuleResolutionKind,
   ScriptTarget,
 } from 'typescript';
+import { MPackage, ValidMConfig } from '../../utils/MPackage';
+import { BuildMode } from '../../utils/typings';
 
 const base: CompilerOptions = {
-  // TODO: base should not contain dom
   lib: ['lib.es2020.d.ts', 'lib.dom.d.ts'],
-  target: ScriptTarget.ES2015,
-  module: ModuleKind.ESNext,
+  target: ScriptTarget.ES5,
+  module: ModuleKind.ES2015,
   moduleResolution: ModuleResolutionKind.NodeJs,
   strict: true,
   strictFunctionTypes: false,
   stripInternal: true,
-  jsx: JsxEmit.React,
   forceConsistentCasingInFileNames: true,
   allowSyntheticDefaultImports: true,
   resolveJsonModule: true,
@@ -30,5 +30,30 @@ const deltaDev: CompilerOptions = {
   incremental: true,
 };
 
-export const prod = base;
-export const dev = Object.assign({}, base, deltaDev);
+function configureJSXEmit(config: ValidMConfig, mode: BuildMode): JsxEmit {
+  switch (config.jsx) {
+    case 'none':
+      return JsxEmit.None;
+    case 'react':
+      return JsxEmit.React;
+    case 'react-jsx':
+      return mode === 'development' ? JsxEmit.ReactJSXDev : JsxEmit.ReactJSX;
+  }
+}
+
+export function getProdConfig(config: ValidMConfig): CompilerOptions {
+  const prodTsConfig = {
+    ...base,
+  };
+  prodTsConfig.jsx = configureJSXEmit(config, 'production');
+  return prodTsConfig;
+}
+
+export function getDevConfig(config: ValidMConfig): CompilerOptions {
+  const devTsConfig = {
+    ...base,
+    ...deltaDev,
+  };
+  devTsConfig.jsx = configureJSXEmit(config, 'development');
+  return devTsConfig;
+}

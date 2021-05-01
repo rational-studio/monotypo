@@ -3,9 +3,11 @@ import * as t from 'typanion';
 const isTarget = t.isEnum(['web', 'library']);
 const isExtensions = t.isArray(t.isString());
 const isEnv = t.isDict(t.isOneOf([t.isString(), t.isNumber(), t.isBoolean()]));
+const isJSX = t.isEnum(['none', 'react', 'react-jsx']);
 
 export const isValidMConfig = t.isObject({
   target: isTarget,
+  jsx: isJSX,
   extensions: isExtensions,
   env: isEnv,
 });
