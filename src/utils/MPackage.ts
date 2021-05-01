@@ -132,7 +132,7 @@ export class MPackage implements GraphNode {
     }
   }
   private getDepHash() {
-    const depHash = getPackageDeps(this._packageFolder);
+    const depHash = getPackageDeps(this._packageFolder, [this._mTempFolder]);
     const depHashArray = Array.from(depHash.entries());
     return JSON.stringify(depHashArray);
   }

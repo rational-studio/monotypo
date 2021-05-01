@@ -9,7 +9,7 @@ export function tscCompiler(
   outDir: string
 ) {
   return new Promise<void>((resolve, reject) => {
-    const worker = new Worker(require.resolve('./worker'), {
+    const worker = new Worker(__non_webpack_require__.resolve('./worker'), {
       workerData: {
         projectSourceDir: project.sourceDir,
         projectTempFolder: project.projectTempFolder,

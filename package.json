@@ -8,7 +8,7 @@
   "license": "MIT",
   "scripts": {
     "dev": "webpack watch",
-    "build": "rimraf dist && NODE_ENV=production webpack"
+    "build": "rimraf dist && NODE_ENV=production webpack && chmod +x ./dist/cli.js"
   },
   "bin": {
     "m": "./dist/cli.js"

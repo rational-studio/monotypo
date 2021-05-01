@@ -3,12 +3,16 @@ const { BannerPlugin } = require('webpack');
 const nodeExternals = require('webpack-node-externals');
 
 module.exports = {
-  mode: 'production',
-  entry: './src/cli.tsx',
+  mode: 'development',
+  entry: {
+    cli: './src/cli.tsx',
+    worker: './src/compilers/tsc/worker.ts',
+  },
   output: {
     path: path.resolve(__dirname, 'dist'),
-    filename: 'cli.js',
+    filename: '[name].js',
   },
+  devtool: 'inline-source-map',
   resolve: {
     extensions: ['.ts', '.tsx', '.js', '.jsx'],
   },
