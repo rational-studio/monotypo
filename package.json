@@ -7,7 +7,8 @@
   "author": "Zhongliang Wang <zwang@rebelworks.io>",
   "license": "MIT",
   "scripts": {
-    "build": "rimraf dist && NODE_ENV=production webpack && chmod +x ./dist/cli.js"
+    "build:dev": "webpack --mode=development && chmod +x ./dist/cli.js",
+    "build:prod": "rimraf dist && webpack --mode=production && chmod +x ./dist/cli.js"
   },
   "engines": {
     "node": ">= 12"
@@ -28,6 +29,7 @@
     "@types/webpack-env": "^1.16.0",
     "rimraf": "^3.0.2",
     "ts-loader": "^9.1.1",
+    "webpack-cli": "^4.6.0",
     "webpack-node-externals": "^3.0.0"
   },
   "dependencies": {
