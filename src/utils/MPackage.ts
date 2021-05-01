@@ -6,7 +6,7 @@ import { getPackageDeps } from '@rushstack/package-deps-hash';
 import { pluginManager } from './pluginManager';
 import { isValidMConfig } from '../schema/mConfig';
 import { InferType } from 'typanion';
-import { CompilationDiagnostic } from './typings';
+import { BuildMode, CompilationDiagnostic } from './typings';
 import { buildInterDist } from './interDist';
 
 const M_CACHE_FOLDER = '.m';
@@ -168,7 +168,7 @@ export class MPackage implements GraphNode {
     ]);
   }
 
-  public async build() {
+  public async build(mode: BuildMode = 'development') {
     if (!this._cachedValidMConfig) {
       console.assert(this.isMConfigValid);
     }
@@ -176,12 +176,12 @@ export class MPackage implements GraphNode {
      * The build steps:
      * BuildInterDist -> Resolve Targets -> Call `Build` on Targets
      */
-    await buildInterDist(this, 'development');
+    await buildInterDist(this, mode);
 
     const buildTarget = pluginManager.resolveTarget(
       this._cachedValidMConfig!.target
     );
 
-    await buildTarget.build(this, 'development');
+    await buildTarget.build(this, mode);
   }
 }
