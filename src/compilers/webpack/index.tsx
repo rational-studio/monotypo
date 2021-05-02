@@ -13,11 +13,11 @@ import * as ReactRefreshWebpackPlugin from '@pmmmwh/react-refresh-webpack-plugin
 
 const { inspect } = require('util');
 
-export function initWebpackCompiler(
+export function initWebpackConfig(
   project: MPackage,
   mode: BuildMode,
   entry: string
-) {
+): webpack.Configuration {
   const isProduction = mode === 'production';
   const applyFastRefresh =
     !isProduction && project.mConfiguration.jsx !== 'none';
@@ -81,5 +81,13 @@ export function initWebpackCompiler(
     treat.configs.webpack?.development ?? {}
   );
 
-  return webpack(finalConfig);
+  return finalConfig;
+}
+
+export function initWebpackCompiler(
+  project: MPackage,
+  mode: BuildMode,
+  entry: string
+) {
+  return webpack(initWebpackConfig(project, mode, entry));
 }
