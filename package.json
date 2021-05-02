@@ -33,6 +33,7 @@
     "webpack-node-externals": "^3.0.0"
   },
   "dependencies": {
+    "@pmmmwh/react-refresh-webpack-plugin": "^0.4.3",
     "@rushstack/package-deps-hash": "^3.0.26",
     "@swc/core": "^1.2.54",
     "anser": "^2.0.1",
@@ -54,6 +55,7 @@
     "node-sass": "^5.0.0",
     "p-limit": "^3.1.0",
     "react": "^17.0.2",
+    "react-refresh-typescript": "^2.0.0",
     "sass-loader": "^11.0.1",
     "tinycolor2": "^1.4.2",
     "treat": "^2.0.4",

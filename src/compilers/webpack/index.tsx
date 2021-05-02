@@ -9,6 +9,7 @@ import { pluginManager } from '../../utils/pluginManager';
 import * as HtmlWebpackPlugin from 'html-webpack-plugin';
 import { BuildMode } from '../../utils/typings';
 import * as process from 'process';
+import * as ReactRefreshWebpackPlugin from '@pmmmwh/react-refresh-webpack-plugin';
 
 const { inspect } = require('util');
 
@@ -18,6 +19,8 @@ export function initWebpackCompiler(
   entry: string
 ) {
   const isProduction = mode === 'production';
+  const applyFastRefresh =
+    !isProduction && project.mConfiguration.jsx !== 'none';
   const initialConfig: Configuration = {
     mode,
     stats: 'errors-warnings',
@@ -59,6 +62,12 @@ export function initWebpackCompiler(
           minifyJS: isProduction,
         },
       }),
+      ...(applyFastRefresh
+        ? [
+            new webpack.HotModuleReplacementPlugin(),
+            new ReactRefreshWebpackPlugin(),
+          ]
+        : []),
     ],
   };
 

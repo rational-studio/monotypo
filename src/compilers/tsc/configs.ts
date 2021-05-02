@@ -5,7 +5,7 @@ import {
   ModuleResolutionKind,
   ScriptTarget,
 } from 'typescript';
-import { MPackage, ValidMConfig } from '../../utils/MPackage';
+import { ValidMConfig } from '../../utils/MPackage';
 import { BuildMode } from '../../utils/typings';
 
 const base: CompilerOptions = {

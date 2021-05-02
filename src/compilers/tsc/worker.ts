@@ -6,6 +6,7 @@ import * as ts from 'typescript';
 import { getDevConfig, getProdConfig } from './configs';
 import * as util from 'util';
 import { ValidMConfig } from '../../utils/MPackage';
+import reactRefresh from 'react-refresh-typescript';
 
 const INCREMENTAL_CACHE_FILE = 'tsbuild.json';
 
@@ -29,6 +30,7 @@ if (isMainThread) {
   };
 
   const isDevMode = mode === 'development';
+  const applyFastRefresh = isDevMode && config.jsx !== 'none';
 
   glob(path.join(projectSourceDir, '**', '*.{ts,tsx}'), (err, files) => {
     const tsconfigFunction = isDevMode ? getDevConfig : getProdConfig;
@@ -52,7 +54,17 @@ if (isMainThread) {
       host: compilerHost,
     });
 
-    const result = program.emit();
+    const result = program.emit(
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      applyFastRefresh
+        ? {
+            before: [reactRefresh()],
+          }
+        : undefined
+    );
 
     if (!result.emitSkipped) {
       parentPort?.postMessage('success');
