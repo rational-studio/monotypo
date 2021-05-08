@@ -1,11 +1,10 @@
-import { Target } from '../typings';
+import { Bundler } from '../typings';
 import * as path from 'path';
-import { initWebpackCompiler } from '../../compilers/webpack';
-import { spawnWebpackDevServer } from '../../watchServer/webpack';
+import { initWebpackCompiler, spawnWebpackDevServer } from './utils';
 
-export const web: Target = {
-  name: 'web',
-  async build(project, mode) {
+export const webpack: Bundler = {
+  name: 'webpack',
+  async bundle(project, mode) {
     return new Promise<void>((resolve, reject) => {
       const compiler = initWebpackCompiler(
         project,

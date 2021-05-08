@@ -43,7 +43,7 @@ Monotypo does:
 
 ```json
 {
-  "target": "web", // node | web | library
+  "bundler": "webpack", // none | webpack | esbuild
   "extensions": ["sass"] // sass
 }
 ```

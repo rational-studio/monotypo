@@ -1,20 +1,20 @@
+import { presetBundlers } from '../bundlers';
+import { Bundler } from '../bundlers/typings';
 import { presetExtensions } from '../extensions';
 import { Extension } from '../extensions/typings';
-import { presetTargets } from '../targets';
-import { Target } from '../targets/typings';
 import { Compiler } from './typings';
 
 class PluginManager {
-  private targets: Map<string, Target> = new Map();
+  private bundlers: Map<string, Bundler> = new Map();
   private extensions: Map<string, Extension> = new Map();
-  public registerTarget(target: Target) {
-    this.targets.set(target.name, target);
+  public registerBundler(bundler: Bundler) {
+    this.bundlers.set(bundler.name, bundler);
   }
   public registerExtension(extension: Extension) {
     this.extensions.set(extension.name, extension);
   }
-  public resolveTarget(name: string) {
-    const target = this.targets.get(name);
+  public resolveBundler(name: string) {
+    const target = this.bundlers.get(name);
     if (target) {
       return target;
     } else {
@@ -45,7 +45,7 @@ class PluginManager {
 export const pluginManager = new PluginManager();
 
 // Register preset targets
-presetTargets.forEach(target => pluginManager.registerTarget(target));
+presetBundlers.forEach(bundler => pluginManager.registerBundler(bundler));
 
 // TODO: create a way to scan customised targets
 

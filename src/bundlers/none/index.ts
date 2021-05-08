@@ -1,9 +1,8 @@
-import { Target } from '../typings';
-import { tscCompiler } from '../../compilers/tsc';
+import { Bundler } from '../typings';
 import { copy } from 'fs-extra';
-export const library: Target = {
-  name: 'library',
-  build(project, mode) {
+export const none: Bundler = {
+  name: 'none',
+  bundle(project, mode) {
     return copy(project.interDistDir, project.distributionDir);
   },
   watch(project, mode) {

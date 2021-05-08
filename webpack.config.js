@@ -5,7 +5,7 @@ const nodeExternals = require('webpack-node-externals');
 module.exports = {
   entry: {
     cli: './src/cli.tsx',
-    worker: './src/compilers/tsc/worker.ts',
+    worker: './src/interDist/tsc/worker.ts',
   },
   output: {
     path: path.resolve(__dirname, 'dist'),

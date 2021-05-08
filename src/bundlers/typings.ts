@@ -1,8 +1,8 @@
 import { MPackage } from '../utils/MPackage';
 import { BuildMode, Compiler } from '../utils/typings';
 
-export interface Target {
+export interface Bundler {
   name: string;
-  build(project: MPackage, mode: BuildMode): Promise<void>;
+  bundle(project: MPackage, mode: BuildMode): Promise<void>;
   watch(project: MPackage, mode: BuildMode): Promise<void>;
 }

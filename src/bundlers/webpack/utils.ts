@@ -10,6 +10,7 @@ import * as HtmlWebpackPlugin from 'html-webpack-plugin';
 import { BuildMode } from '../../utils/typings';
 import * as process from 'process';
 import * as ReactRefreshWebpackPlugin from '@pmmmwh/react-refresh-webpack-plugin';
+import * as WebpackDevServer from 'webpack-dev-server';
 
 const { inspect } = require('util');
 
@@ -96,4 +97,33 @@ export function initWebpackCompiler(
   entry: string
 ) {
   return webpack(initWebpackConfig(project, mode, entry));
+}
+
+export function spawnWebpackDevServer(
+  project: MPackage,
+  mode: BuildMode,
+  entry: string
+) {
+  const isDevMode = mode === 'development';
+  const config = initWebpackConfig(project, mode, entry);
+  const compiler = webpack(config);
+  const server = new WebpackDevServer(compiler, {
+    host: '0.0.0.0',
+    port: 8080,
+    proxy: {
+      '/api': {
+        target: process.env.BACKEND_PROXY,
+        pathRewrite: { '^/api': '' },
+        changeOrigin: true,
+      },
+    },
+    disableHostCheck: true,
+    https: process.env.HTTPS ? true : false,
+    historyApiFallback: {
+      verbose: true,
+    },
+    hot: isDevMode,
+    open: true,
+  });
+  return server;
 }

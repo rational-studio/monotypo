@@ -1,12 +1,12 @@
 import * as cpy from 'cpy';
-import { tscCompiler } from '../compilers/tsc';
-import { MPackage } from './MPackage';
-import { BuildMode } from './typings';
+import { tscCompiler } from '../interDist/tsc';
+import { MPackage } from '../utils/MPackage';
+import { BuildMode } from '../utils/typings';
 import * as path from 'path';
 
 interface InterDistOptions {
   copyAssets?: boolean;
-  experimentalCompiler?: 'swc' | 'esbuild';
+  compiler?: 'tsc' | 'swc';
 }
 
 function assetsCopy(
@@ -27,11 +27,15 @@ function assetsCopy(
 export async function buildInterDist(
   project: MPackage,
   mode: BuildMode,
-  { copyAssets = false }: InterDistOptions = {}
+  { copyAssets = false, compiler = 'tsc' }: InterDistOptions = {}
 ) {
   // Use TypeScript compiler for now
-  await Promise.all([
-    tscCompiler(project, mode, project.interDistDir),
-    assetsCopy(project, project.interDistDir),
-  ]);
+  if (compiler === 'tsc') {
+    await Promise.all([
+      tscCompiler(project, mode, project.interDistDir),
+      assetsCopy(project, project.interDistDir),
+    ]);
+  } else {
+    throw new Error('SWC Compiler is not implemented.');
+  }
 }
