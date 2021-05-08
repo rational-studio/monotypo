@@ -6,4 +6,7 @@ export const library: Target = {
   build(project, mode) {
     return copy(project.interDistDir, project.distributionDir);
   },
+  watch(project, mode) {
+    return copy(project.interDistDir, project.distributionDir);
+  },
 };

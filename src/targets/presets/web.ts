@@ -1,6 +1,7 @@
 import { Target } from '../typings';
 import * as path from 'path';
 import { initWebpackCompiler } from '../../compilers/webpack';
+import { spawnWebpackDevServer } from '../../watchServer/webpack';
 
 export const web: Target = {
   name: 'web',
@@ -27,6 +28,17 @@ export const web: Target = {
           resolve();
         }
       });
+    });
+  },
+  async watch(project, mode) {
+    return new Promise<void>((resolve, reject) => {
+      const server = spawnWebpackDevServer(
+        project,
+        mode,
+        path.join(project.interDistDir, 'index.js')
+      );
+      server.listen(8080);
+      resolve();
     });
   },
 };

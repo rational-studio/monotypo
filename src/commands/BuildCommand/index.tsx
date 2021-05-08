@@ -1,29 +1,10 @@
 import { Command, Option } from 'clipanion';
-import { getPackageInfo } from '../../utils/workspace';
-import { parallelizeTasks } from '../../utils/parallelism';
-import { MPackage } from '../../utils/MPackage';
 import { render } from 'ink';
 import BuildUI from './components/BuildUI';
-
-function getTaskQueue(target?: string) {
-  const packageInfo = getPackageInfo();
-  if (target) {
-    const pkg = packageInfo.get(target);
-    if (pkg) {
-      return parallelizeTasks(pkg);
-    } else {
-      throw new Error(`Target Package "${target}" is not valid.`);
-    }
-  } else {
-    return parallelizeTasks(...Array.from(packageInfo.values()));
-  }
-}
-
-function stripTaskQueueWithoutConfig(taskQueue: MPackage[][]) {
-  return taskQueue
-    .map(items => items.filter(item => item.isMConfigExisted))
-    .filter(items => items.length > 0);
-}
+import {
+  stripTaskQueueWithoutConfig,
+  getTaskQueue,
+} from '../../utils/taskQueue';
 
 export class BuildCommand extends Command {
   static paths = [['build']];

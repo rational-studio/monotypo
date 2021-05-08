@@ -32,10 +32,12 @@ if (isMainThread) {
   const isDevMode = mode === 'development';
   const applyFastRefresh = isDevMode && config.jsx !== 'none';
 
+  console.log({ applyFastRefresh });
+
   glob(path.join(projectSourceDir, '**', '*.{ts,tsx}'), (err, files) => {
     const tsconfigFunction = isDevMode ? getDevConfig : getProdConfig;
 
-    const compilerHost = ts.createCompilerHost({
+    const compilerHost = ts.createIncrementalCompilerHost({
       ...tsconfigFunction(config),
       noEmitOnError: true,
       sourceRoot: projectSourceDir,

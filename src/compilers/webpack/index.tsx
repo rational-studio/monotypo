@@ -56,18 +56,24 @@ export function initWebpackConfig(
         chunkFilename: isProduction ? '[contenthash].css' : '[id].css',
       }),
       new HtmlWebpackPlugin({
-        template: 'index.html',
+        templateContent: `<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>M</title>
+  </head>
+  <body>
+    <div id="app"></div>
+  </body>
+</html>`,
         minify: {
           collapseWhitespace: isProduction,
           minifyJS: isProduction,
         },
       }),
-      ...(applyFastRefresh
-        ? [
-            new webpack.HotModuleReplacementPlugin(),
-            new ReactRefreshWebpackPlugin(),
-          ]
-        : []),
+      ...(applyFastRefresh ? [new ReactRefreshWebpackPlugin()] : []),
     ],
   };
 

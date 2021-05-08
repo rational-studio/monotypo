@@ -8,6 +8,7 @@ import { isValidMConfig } from '../schema/mConfig';
 import { InferType } from 'typanion';
 import { BuildMode, CompilationDiagnostic } from './typings';
 import { buildInterDist } from './interDist';
+import { watch } from 'chokidar';
 
 const M_CACHE_FOLDER = '.m';
 
@@ -192,5 +193,28 @@ export class MPackage implements GraphNode {
     );
 
     await buildTarget.build(this, mode);
+  }
+
+  public async watch(mode: BuildMode = 'development') {
+    if (!this._cachedValidMConfig) {
+      console.assert(this.isMConfigValid);
+    }
+    /**
+     * The build steps:
+     * BuildInterDist -> Resolve Targets -> Call `Build` on Targets
+     */
+    await buildInterDist(this, mode);
+
+    const watcher = watch(this.sourceDir);
+
+    watcher.on('change', () => {
+      buildInterDist(this, mode);
+    });
+
+    const buildTarget = pluginManager.resolveTarget(
+      this._cachedValidMConfig!.target
+    );
+
+    await buildTarget.watch(this, mode);
   }
 }
