@@ -34,7 +34,12 @@ if (isMainThread) {
 
   console.log({ applyFastRefresh });
 
-  glob(path.join(projectSourceDir, '**', '*.{ts,tsx}'), (err, files) => {
+  glob(path.join(projectSourceDir, '**', '*.{ts,tsx}'), (err, allFiles) => {
+    // Exclude all test files (should be an option)
+    const files = allFiles.filter(
+      fileName =>
+        !fileName.endsWith('.test.ts') && !fileName.endsWith('.test.tsx')
+    );
     const tsconfigFunction = isDevMode ? getDevConfig : getProdConfig;
 
     const compilerHost = ts.createIncrementalCompilerHost({

@@ -18,12 +18,12 @@ const M_CACHE_FOLDER = '.m';
 
   This compilation can be done either in `swc` or `tsc`.
 
-  The strategies for other targets:
+  The strategies for other bundlers:
   
-  - library -> simply copy InterDist to actual dist folder
-  - web -> by default, it just bundles InterDist with Webpack, no Babel or TypeScript preprocessing nor SCSS/Preprocessing
+  - none -> simply copy InterDist to actual dist folder
+  - webpack -> by default, it just bundles InterDist with Webpack, no Babel or TypeScript preprocessing nor SCSS/Preprocessing
 */
-const M_CACHE_TYPESCRIPT_INTER_DIST = '.typeInterDist';
+const M_CACHE_TYPESCRIPT_INTER_DIST = '.interDist';
 
 const DEP_HASH_FILE = 'dep-hash.json';
 const M_CONFIG_FILE = 'm.config.json';
