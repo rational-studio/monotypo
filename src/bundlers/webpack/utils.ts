@@ -11,17 +11,18 @@ import { BuildMode } from '../../utils/typings';
 import * as process from 'process';
 import * as ReactRefreshWebpackPlugin from '@pmmmwh/react-refresh-webpack-plugin';
 import * as WebpackDevServer from 'webpack-dev-server';
+import { Command } from '../../commands/typings';
 
 const { inspect } = require('util');
 
 export function initWebpackConfig(
   project: MPackage,
+  command: Command,
   mode: BuildMode,
   entry: string
 ): webpack.Configuration {
   const isProduction = mode === 'production';
-  const applyFastRefresh =
-    !isProduction && project.mConfiguration.jsx !== 'none';
+  const applyFastRefresh = !isProduction && command === Command.Watch;
   const initialConfig: Configuration = {
     mode,
     stats: 'errors-warnings',
@@ -93,10 +94,11 @@ export function initWebpackConfig(
 
 export function initWebpackCompiler(
   project: MPackage,
+  command: Command,
   mode: BuildMode,
   entry: string
 ) {
-  return webpack(initWebpackConfig(project, mode, entry));
+  return webpack(initWebpackConfig(project, command, mode, entry));
 }
 
 export function spawnWebpackDevServer(
@@ -105,7 +107,7 @@ export function spawnWebpackDevServer(
   entry: string
 ) {
   const isDevMode = mode === 'development';
-  const config = initWebpackConfig(project, mode, entry);
+  const config = initWebpackConfig(project, Command.Watch, mode, entry);
   const compiler = webpack(config);
   const server = new WebpackDevServer(compiler, {
     host: '0.0.0.0',
@@ -124,6 +126,7 @@ export function spawnWebpackDevServer(
     },
     hot: isDevMode,
     open: true,
+    noInfo: true,
   });
   return server;
 }

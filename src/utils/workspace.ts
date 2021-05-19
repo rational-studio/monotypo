@@ -11,6 +11,7 @@ import {
 import { MPackage } from './MPackage';
 import * as assert from 'assert';
 import { MinimalPackageJSON } from './typings';
+import { OPT_NO_DEPENDANT_LIST } from '../flags';
 
 let packageInfoConstructed = false;
 
@@ -46,9 +47,8 @@ export function findCurrentPackageDependencies(
   dependencies: string[];
 } {
   const packageJsonPath = findCurrentPackageJsonPath(directory);
-  const packageJson: MinimalPackageJSON = __non_webpack_require__(
-    packageJsonPath
-  );
+  const packageJson: MinimalPackageJSON =
+    __non_webpack_require__(packageJsonPath);
   const allDependencies = getWorkspaceInfo();
   const info = allDependencies[packageJson.name];
   return {
@@ -103,6 +103,15 @@ export function getPackageInfo() {
         return pinfo;
       });
     });
+
+    if (!OPT_NO_DEPENDANT_LIST) {
+      // Construct dependants array based on dependency
+      for (const [, pkg] of memoizedMPackageInfo) {
+        for (const dependency of pkg.dependencies) {
+          dependency.addDependants(pkg);
+        }
+      }
+    }
 
     packageInfoConstructed = true;
   }

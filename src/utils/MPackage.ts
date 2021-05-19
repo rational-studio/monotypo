@@ -9,6 +9,8 @@ import { InferType } from 'typanion';
 import { BuildMode, CompilationDiagnostic } from './typings';
 import { watch } from 'chokidar';
 import { buildInterDist } from '../interDist';
+import { assert } from 'console';
+import { OPT_NO_DEPENDANT_LIST } from '../flags';
 
 const M_CACHE_FOLDER = '.m';
 
@@ -51,6 +53,7 @@ export class MPackage implements GraphNode {
   private _depHashLocation: string;
   private _mConfigLocation: string;
   private _monorepoDependencies: MPackage[] = [];
+  private _monorepoDependants: MPackage[] = [];
   private _cachedValidMConfig?: ValidMConfig;
   private _errorMessages: CompilationDiagnostic[] = [];
   private _warningMessages: CompilationDiagnostic[] = [];
@@ -87,6 +90,18 @@ export class MPackage implements GraphNode {
   }
   public set dependencies(value: MPackage[]) {
     this._monorepoDependencies = value;
+  }
+  public get dependants() {
+    assert(
+      !OPT_NO_DEPENDANT_LIST,
+      'Dependants are not accessible when OPTIMIZATION_NO_DEPENDANT_LIST = true.'
+    );
+    return this._monorepoDependants;
+  }
+  public addDependants(value: MPackage) {
+    if (!this._monorepoDependants.includes(value)) {
+      this._monorepoDependants.push(value);
+    }
   }
   public get mConfigLocation() {
     return this._mConfigLocation;

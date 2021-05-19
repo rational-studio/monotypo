@@ -1,10 +1,32 @@
+import { watch } from 'chokidar';
 import { Command, Option } from 'clipanion';
+import { assert } from 'console';
 import { render, Box, Text } from 'ink';
-import Watch from '../../components/Watch';
+import { OPT_NO_DEPENDANT_LIST } from '../../flags';
+import { MPackage } from '../../utils/MPackage';
 import {
   stripTaskQueueWithoutConfig,
   getTaskQueue,
 } from '../../utils/taskQueue';
+
+async function rebuildRecursively(pkg: MPackage, target: string) {
+  assert(
+    !OPT_NO_DEPENDANT_LIST,
+    'OPTIMIZATION_NO_DEPENDANT_LIST must be false to use this feature.'
+  );
+  await pkg.build();
+  const dependantsWithoutTarget = pkg.dependants.filter(
+    item => item.name !== target
+  );
+  if (dependantsWithoutTarget.length === 0) {
+    return;
+  } else {
+    await Promise.all(
+      dependantsWithoutTarget.map(pkg => rebuildRecursively(pkg, target))
+    );
+  }
+}
+
 export class DevCommand extends Command {
   static paths = [['dev'], ['watch']];
   static usage = {
@@ -15,7 +37,7 @@ export class DevCommand extends Command {
   };
   private to = Option.String('--to,-t', {
     tolerateBoolean: false,
-    required: false,
+    required: true,
     description:
       'Normally all projects in the monorepo will be processed; adding this parameter will instead select a subset of projects. Each "--to" parameter expands this selection to include PROJECT and all its dependencies. "." can be used as shorthand for the project in the current working directory.',
   });
@@ -35,9 +57,22 @@ export class DevCommand extends Command {
         await Promise.all(tasks.map(task => task.build()));
       }
     }
+
+    // Spawn Chokidar
+    taskQueue
+      .flat()
+      .filter(task => task.name !== target)
+      .map(task => {
+        const watcher = watch(task.sourceDir);
+        watcher.on('change', () => {
+          task.build();
+        });
+        return watcher;
+      });
+
     render(
       <Box>
-        <Text>{target}</Text>
+        <Text italic={true}>{target}</Text>
       </Box>
     );
   }

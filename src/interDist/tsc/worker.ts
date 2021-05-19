@@ -15,24 +15,17 @@ if (isMainThread) {
     'TypeScript compiler is not supposed to run on the main thread.'
   );
 } else {
-  const {
-    projectSourceDir,
-    projectTempFolder,
-    mode,
-    outDir,
-    config,
-  } = workerData as {
-    projectSourceDir: string;
-    projectTempFolder: string;
-    mode: BuildMode;
-    outDir: string;
-    config: ValidMConfig;
-  };
+  const { projectSourceDir, projectTempFolder, mode, outDir, config } =
+    workerData as {
+      projectSourceDir: string;
+      projectTempFolder: string;
+      mode: BuildMode;
+      outDir: string;
+      config: ValidMConfig;
+    };
 
   const isDevMode = mode === 'development';
-  const applyFastRefresh = isDevMode && config.jsx !== 'none';
-
-  console.log({ applyFastRefresh });
+  const insertFastRefreshCode = isDevMode;
 
   glob(path.join(projectSourceDir, '**', '*.{ts,tsx}'), (err, allFiles) => {
     // Exclude all test files (should be an option)
@@ -66,7 +59,7 @@ if (isMainThread) {
       undefined,
       undefined,
       undefined,
-      applyFastRefresh
+      insertFastRefreshCode
         ? {
             before: [reactRefresh()],
           }

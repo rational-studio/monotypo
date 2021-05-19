@@ -1,3 +1,4 @@
+import { inspect } from 'util';
 import { MPackage } from './MPackage';
 import { parallelizeTasks } from './parallelism';
 import { getPackageInfo } from './workspace';

@@ -3,7 +3,7 @@ import { Text, Box } from 'ink';
 import Spinner from 'ink-spinner';
 import { generateGradient } from '../../../../utils/gradient';
 import * as Gradient from 'ink-gradient';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, memo } from 'react';
 import { useDuration } from '../../../../utils/useDuration';
 import TimeMeasurement from '../../../../components/TimeMeasurement';
 
@@ -104,4 +104,4 @@ const BuildUI: React.FC<BuildUIProps> = ({ taskQueue, isCleanBuild }) => {
   );
 };
 
-export default BuildUI;
+export default memo(BuildUI);

@@ -14,7 +14,6 @@ const base: CompilerOptions = {
   module: ModuleKind.ES2015,
   moduleResolution: ModuleResolutionKind.NodeJs,
   strict: true,
-  strictFunctionTypes: false,
   stripInternal: true,
   forceConsistentCasingInFileNames: true,
   allowSyntheticDefaultImports: true,
