@@ -6,10 +6,12 @@ import * as Gradient from 'ink-gradient';
 import { useEffect, useState, memo } from 'react';
 import { useDuration } from '../../../../utils/useDuration';
 import TimeMeasurement from '../../../../components/TimeMeasurement';
+import { BuildMode } from '../../../../utils/typings';
 
 interface BuildUIProps {
   taskQueue: MPackage[][];
   isCleanBuild: boolean;
+  buildMode: BuildMode;
 }
 
 const enum BuildState {
@@ -20,7 +22,11 @@ const enum BuildState {
   BuildingError,
 }
 
-const BuildUI: React.FC<BuildUIProps> = ({ taskQueue, isCleanBuild }) => {
+const BuildUI: React.FC<BuildUIProps> = ({
+  taskQueue,
+  isCleanBuild,
+  buildMode,
+}) => {
   const queue = taskQueue.flat().reverse();
   const maxLength = Math.max(...queue.map(item => item.name.length));
   const [buildingStatus, setBuildingStatus] = useState<{
@@ -55,7 +61,7 @@ const BuildUI: React.FC<BuildUIProps> = ({ taskQueue, isCleanBuild }) => {
                 ...s,
                 [task.name]: BuildState.Building,
               }));
-              await task.build();
+              await task.build(buildMode);
               await task.updateDepHash();
               setBuildingStatus(s => ({
                 ...s,

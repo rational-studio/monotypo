@@ -8,13 +8,20 @@ import {
   stripTaskQueueWithoutConfig,
   getTaskQueue,
 } from '../../utils/taskQueue';
+import { BuildMode } from '../../utils/typings';
 
-async function rebuildRecursively(pkg: MPackage, target: string) {
+async function rebuildRecursively(
+  pkg: MPackage,
+  buildMode: BuildMode,
+  target: string
+) {
   assert(
     !OPT_NO_DEPENDANT_LIST,
     'OPTIMIZATION_NO_DEPENDANT_LIST must be false to use this feature.'
   );
-  await pkg.build();
+  if (!pkg.isDepHashUnchanged) {
+    await pkg.build(buildMode);
+  }
   const dependantsWithoutTarget = pkg.dependants.filter(
     item => item.name !== target
   );
@@ -22,7 +29,9 @@ async function rebuildRecursively(pkg: MPackage, target: string) {
     return;
   } else {
     await Promise.all(
-      dependantsWithoutTarget.map(pkg => rebuildRecursively(pkg, target))
+      dependantsWithoutTarget.map(pkg =>
+        rebuildRecursively(pkg, buildMode, target)
+      )
     );
   }
 }
@@ -54,7 +63,7 @@ export class DevCommand extends Command {
       if (tasks.find(task => task.name === target)) {
         await Promise.all(tasks.map(task => task.watch()));
       } else {
-        await Promise.all(tasks.map(task => task.build()));
+        await Promise.all(tasks.map(task => task.build('development')));
       }
     }
 
@@ -65,7 +74,7 @@ export class DevCommand extends Command {
       .map(task => {
         const watcher = watch(task.sourceDir);
         watcher.on('change', () => {
-          task.build();
+          task.build('development');
         });
         return watcher;
       });

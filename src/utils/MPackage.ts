@@ -193,7 +193,7 @@ export class MPackage implements GraphNode {
     ]);
   }
 
-  public async build(mode: BuildMode = 'development') {
+  public async build(mode: BuildMode) {
     if (!this._cachedValidMConfig) {
       console.assert(this.isMConfigValid);
     }

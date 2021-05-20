@@ -25,6 +25,12 @@ export class BuildCommand extends Command {
     const { to: target, clean: isCleanBuild } = this;
     // TODO: Should give warning to users if some of the dependent project can't be built
     const taskQueue = stripTaskQueueWithoutConfig(getTaskQueue(target));
-    render(<BuildUI taskQueue={taskQueue} isCleanBuild={isCleanBuild} />);
+    render(
+      <BuildUI
+        taskQueue={taskQueue}
+        isCleanBuild={isCleanBuild}
+        buildMode="production"
+      />
+    );
   }
 }
