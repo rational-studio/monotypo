@@ -7,6 +7,7 @@ import * as path from 'path';
 interface InterDistOptions {
   copyAssets?: boolean;
   compiler?: 'tsc' | 'swc';
+  errorTolerant?: boolean;
 }
 
 function assetsCopy(
@@ -27,12 +28,16 @@ function assetsCopy(
 export async function buildInterDist(
   project: MPackage,
   mode: BuildMode,
-  { copyAssets = false, compiler = 'tsc' }: InterDistOptions = {}
+  {
+    copyAssets = false,
+    compiler = 'tsc',
+    errorTolerant = false,
+  }: InterDistOptions = {}
 ) {
   // Use TypeScript compiler for now
   if (compiler === 'tsc') {
     await Promise.all([
-      tscCompiler(project, mode, project.interDistDir),
+      tscCompiler(project, mode, project.interDistDir, errorTolerant),
       assetsCopy(project, project.interDistDir),
     ]);
   } else {

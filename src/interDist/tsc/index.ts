@@ -6,7 +6,8 @@ import { Worker } from 'worker_threads';
 export function tscCompiler(
   project: MPackage,
   mode: BuildMode,
-  outDir: string
+  outDir: string,
+  errorTolerant: boolean
 ) {
   return new Promise<void>((resolve, reject) => {
     const worker = new Worker(__non_webpack_require__.resolve('./worker'), {
@@ -16,6 +17,7 @@ export function tscCompiler(
         mode,
         outDir,
         config: project.mConfiguration,
+        errorTolerant,
       },
     });
     worker.once('message', message => {

@@ -1,11 +1,22 @@
 import { Bundler } from '../typings';
 import { copy } from 'fs-extra';
+import { watch } from 'chokidar';
+import { MPackage } from '../../utils/MPackage';
+
+function copyInterDist(project: MPackage) {
+  return copy(project.interDistDir, project.distributionDir);
+}
+
 export const none: Bundler = {
   name: 'none',
   bundle(project, mode) {
-    return copy(project.interDistDir, project.distributionDir);
+    return copyInterDist(project);
   },
-  watch(project, mode) {
-    return copy(project.interDistDir, project.distributionDir);
+  async watch(project, mode) {
+    await copyInterDist(project);
+    const watcher = watch(project.interDistDir);
+    watcher.on('change', () => {
+      copyInterDist(project);
+    });
   },
 };

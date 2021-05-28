@@ -59,25 +59,10 @@ export class DevCommand extends Command {
     const { to: target } = this;
     // TODO: Should give warning to users if some of the dependent project can't be built
     const taskQueue = stripTaskQueueWithoutConfig(getTaskQueue(target));
-    for (const tasks of taskQueue) {
-      if (tasks.find(task => task.name === target)) {
-        await Promise.all(tasks.map(task => task.watch()));
-      } else {
-        await Promise.all(tasks.map(task => task.build('development')));
-      }
-    }
 
-    // Spawn Chokidar
-    taskQueue
-      .flat()
-      .filter(task => task.name !== target)
-      .map(task => {
-        const watcher = watch(task.sourceDir);
-        watcher.on('change', () => {
-          task.build('development');
-        });
-        return watcher;
-      });
+    for (const tasks of taskQueue) {
+      await Promise.all(tasks.map(task => task.watch('development')));
+    }
 
     render(
       <Box>

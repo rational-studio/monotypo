@@ -38,8 +38,13 @@ export const webpack: Bundler = {
         mode,
         path.join(project.interDistDir, 'index.js')
       );
-      server.listen(8080);
-      resolve();
+      server.listen(8080, error => {
+        if (!error) {
+          resolve();
+        } else {
+          reject(error);
+        }
+      });
     });
   },
 };

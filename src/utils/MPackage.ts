@@ -210,7 +210,7 @@ export class MPackage implements GraphNode {
     await bundler.bundle(this, mode);
   }
 
-  public async watch(mode: BuildMode = 'development') {
+  public async watch(mode: BuildMode) {
     if (!this._cachedValidMConfig) {
       console.assert(this.isMConfigValid);
     }
@@ -223,7 +223,7 @@ export class MPackage implements GraphNode {
     const watcher = watch(this.sourceDir);
 
     watcher.on('change', () => {
-      buildInterDist(this, mode);
+      buildInterDist(this, mode, { errorTolerant: true });
     });
 
     const bundler = pluginManager.resolveBundler(

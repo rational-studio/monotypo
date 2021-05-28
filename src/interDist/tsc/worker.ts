@@ -15,14 +15,21 @@ if (isMainThread) {
     'TypeScript compiler is not supposed to run on the main thread.'
   );
 } else {
-  const { projectSourceDir, projectTempFolder, mode, outDir, config } =
-    workerData as {
-      projectSourceDir: string;
-      projectTempFolder: string;
-      mode: BuildMode;
-      outDir: string;
-      config: ValidMConfig;
-    };
+  const {
+    projectSourceDir,
+    projectTempFolder,
+    mode,
+    outDir,
+    config,
+    errorTolerant,
+  } = workerData as {
+    projectSourceDir: string;
+    projectTempFolder: string;
+    mode: BuildMode;
+    outDir: string;
+    config: ValidMConfig;
+    errorTolerant: boolean;
+  };
 
   const isDevMode = mode === 'development';
   const insertFastRefreshCode = isDevMode;
@@ -68,7 +75,7 @@ if (isMainThread) {
 
     if (!result.emitSkipped) {
       parentPort?.postMessage('success');
-    } else {
+    } else if (!errorTolerant) {
       console.log(util.inspect(result.diagnostics));
       parentPort?.postMessage('failed');
     }
