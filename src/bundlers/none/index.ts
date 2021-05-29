@@ -3,8 +3,12 @@ import { copy } from 'fs-extra';
 import { watch } from 'chokidar';
 import { MPackage } from '../../utils/MPackage';
 
-function copyInterDist(project: MPackage) {
-  return copy(project.interDistDir, project.distributionDir);
+async function copyInterDist(project: MPackage) {
+  try {
+    return copy(project.interDistDir, project.distributionDir);
+  } catch (err) {
+    console.log('Failed to copy', err);
+  }
 }
 
 export const none: Bundler = {

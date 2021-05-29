@@ -11,6 +11,7 @@ Monotypo does:
 - Shared prettier configuration
 - Opinionated Danger / Husky rules
 - Changelog solution
+- Sparse checkout
 
 ### Dependencies
 
@@ -36,6 +37,8 @@ Monotypo does:
 `m doctor` (Phase 2)
 
 `m eject [packageName]` (Phase 2)
+
+`m checkout [packageName]` (Phase 3) 
 
 ### Config
 

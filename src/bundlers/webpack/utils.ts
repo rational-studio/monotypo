@@ -52,7 +52,6 @@ export function initWebpackConfig(
       ],
     },
     plugins: [
-      // @ts-expect-error typings in MiniCSS has conflicts with the latest Webpack one
       new MiniCssExtractPlugin({
         filename: isProduction ? '[contenthash].css' : '[name].css',
         chunkFilename: isProduction ? '[contenthash].css' : '[id].css',
