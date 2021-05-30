@@ -31,6 +31,7 @@ export function initWebpackConfig(
     output: {
       path: project.distributionDir,
       filename: isProduction ? '[contenthash].js' : '[name].js',
+      publicPath: '/',
     },
     resolve: {
       fallback: {
@@ -124,7 +125,6 @@ export function spawnWebpackDevServer(
       verbose: true,
     },
     hot: isDevMode,
-    open: true,
     noInfo: true,
   });
   return server;

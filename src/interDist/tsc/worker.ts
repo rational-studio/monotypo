@@ -48,11 +48,15 @@ if (isMainThread) {
       sourceRoot: projectSourceDir,
     });
 
-    const program = ts.createProgram({
+    const createProgram = isDevMode
+      ? ts.createIncrementalProgram
+      : ts.createProgram;
+
+    const program = createProgram({
       rootNames: files,
       options: {
         ...tsconfigFunction(config),
-        noEmitOnError: true,
+        noEmitOnError: !errorTolerant,
         outDir,
         tsBuildInfoFile: isDevMode
           ? path.join(projectTempFolder, INCREMENTAL_CACHE_FILE)

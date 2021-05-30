@@ -18,13 +18,14 @@ const base: CompilerOptions = {
   forceConsistentCasingInFileNames: true,
   allowSyntheticDefaultImports: true,
   resolveJsonModule: true,
+  declaration: true,
+  downlevelIteration: true,
   sourceMap: true,
   skipLibCheck: true,
 };
 
 const deltaDev: CompilerOptions = {
   target: ScriptTarget.ES2020,
-  declaration: true,
   declarationMap: true,
   incremental: true,
 };

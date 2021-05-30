@@ -1,11 +1,46 @@
 import { Bundler } from '../typings';
-import { copy } from 'fs-extra';
+import * as cpy from 'cpy';
 import { watch } from 'chokidar';
 import { MPackage } from '../../utils/MPackage';
+import * as path from 'path';
+import type { RawSourceMap } from 'source-map';
+import * as glob from 'glob';
+import * as fs from 'fs-extra';
 
 async function copyInterDist(project: MPackage) {
   try {
-    return copy(project.interDistDir, project.distributionDir);
+    await cpy(
+      ['.', '!./**/*.map'],
+      path.relative(project.interDistDir, project.distributionDir),
+      { cwd: project.interDistDir, parents: true }
+    );
+
+    const interDistSourceMap = glob.sync(
+      path.join(project.interDistDir, '**', '*.map')
+    );
+
+    // Rewrite Source Map Path
+    for (const mapFile of interDistSourceMap) {
+      const relativeToInterDist = path.relative(project.interDistDir, mapFile);
+
+      const file = fs.readFileSync(mapFile, { encoding: 'utf8' });
+      const map = JSON.parse(file) as RawSourceMap;
+      map.sources = map.sources.map(source => {
+        return path.relative(
+          path.resolve(project.distributionDir),
+          path.resolve(project.interDistDir, source)
+        );
+      });
+      fs.ensureFileSync(
+        path.join(project.distributionDir, relativeToInterDist)
+      );
+      fs.writeFileSync(
+        path.join(project.distributionDir, relativeToInterDist),
+        JSON.stringify(map)
+      );
+    }
+
+    return;
   } catch (err) {
     console.log('Failed to copy', err);
   }
