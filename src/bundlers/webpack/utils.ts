@@ -82,11 +82,16 @@ export function initWebpackConfig(
   // TODO: Resolve this from m.config.json
   const sass = pluginManager.resolveExtension('sass', 'webpack');
   const treat = pluginManager.resolveExtension('treat', 'webpack');
+  const vanillaExtract = pluginManager.resolveExtension(
+    'vanilla-extract',
+    'webpack'
+  );
 
   const finalConfig = merge(
     initialConfig,
     sass.configs.webpack?.development ?? {},
-    treat.configs.webpack?.development ?? {}
+    treat.configs.webpack?.development ?? {},
+    vanillaExtract.configs.webpack?.development ?? {}
   );
 
   return finalConfig;
