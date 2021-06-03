@@ -10,7 +10,9 @@ const vanillaExtractConfig: Configuration = {
         exclude: /node_modules/,
         use: {
           loader: require.resolve('babel-loader'),
-          options: { plugins: ['@vanilla-extract/babel-plugin'] },
+          options: {
+            plugins: [require.resolve('@vanilla-extract/babel-plugin')],
+          },
         },
       },
     ],
