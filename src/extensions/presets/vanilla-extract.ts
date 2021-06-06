@@ -1,6 +1,7 @@
 import { Configuration } from 'webpack';
 import { Extension } from '../typings';
 import { VanillaExtractPlugin } from '@vanilla-extract/webpack-plugin';
+import MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 const vanillaExtractConfig: Configuration = {
   module: {
@@ -14,6 +15,10 @@ const vanillaExtractConfig: Configuration = {
             plugins: [require.resolve('@vanilla-extract/babel-plugin')],
           },
         },
+      },
+      {
+        test: /\.css$/,
+        use: [MiniCssExtractPlugin.loader, require.resolve('css-loader')],
       },
     ],
   },

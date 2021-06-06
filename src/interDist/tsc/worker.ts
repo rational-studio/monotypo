@@ -7,6 +7,7 @@ import { getDevConfig, getProdConfig } from './configs';
 import * as util from 'util';
 import { ValidMConfig } from '../../utils/MPackage';
 import reactRefresh from 'react-refresh-typescript';
+import { addDisplayNameTransformer } from 'ts-react-display-name';
 
 const INCREMENTAL_CACHE_FILE = 'tsbuild.json';
 
@@ -32,7 +33,6 @@ if (isMainThread) {
   };
 
   const isDevMode = mode === 'development';
-  const insertFastRefreshCode = isDevMode;
 
   glob(path.join(projectSourceDir, '**', '*.{ts,tsx}'), (err, allFiles) => {
     // Exclude all test files (should be an option)
@@ -70,9 +70,20 @@ if (isMainThread) {
       undefined,
       undefined,
       undefined,
-      insertFastRefreshCode
+      isDevMode
         ? {
-            before: [reactRefresh()],
+            before: [
+              reactRefresh(),
+              addDisplayNameTransformer({
+                classTypes: [],
+                factoryFuncs: [
+                  'React.forwardRef',
+                  'React.memo',
+                  'forwardRef',
+                  'memo',
+                ],
+              }),
+            ],
           }
         : undefined
     );
