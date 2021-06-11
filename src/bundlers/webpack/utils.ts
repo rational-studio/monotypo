@@ -32,6 +32,7 @@ export function initWebpackConfig(
       path: project.distributionDir,
       filename: isProduction ? '[contenthash].js' : '[name].js',
       publicPath: '/',
+      // devtoolModuleFilenameTemplate: 'file://[absolute-resource-path]',
     },
     resolve: {
       fallback: {
@@ -46,6 +47,11 @@ export function initWebpackConfig(
     },
     module: {
       rules: [
+        {
+          test: /\.js$/,
+          enforce: 'pre',
+          loader: require.resolve('merge-source-map-loader'),
+        },
         {
           test: /\.(eot|ttf|woff|woff2|png|jpe?g|gif|svg|mp4|webm)(\?.*)?$/,
           loader: require.resolve('file-loader'),
