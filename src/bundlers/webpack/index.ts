@@ -36,7 +36,8 @@ export const webpack: Bundler = {
       const server = spawnWebpackDevServer(
         project,
         mode,
-        path.join(project.interDistDir, 'index.js')
+        path.join(project.interDistDir, 'index.js'),
+        false
       );
       server.listen(8080, error => {
         if (!error) {

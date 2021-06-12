@@ -12,6 +12,7 @@ import * as process from 'process';
 import * as ReactRefreshWebpackPlugin from '@pmmmwh/react-refresh-webpack-plugin';
 import * as WebpackDevServer from 'webpack-dev-server';
 import { Command } from '../../commands/typings';
+import { getDevToolConfig } from './devtoolConfig';
 
 const { inspect } = require('util');
 
@@ -32,7 +33,6 @@ export function initWebpackConfig(
       path: project.distributionDir,
       filename: isProduction ? '[contenthash].js' : '[name].js',
       publicPath: '/',
-      // devtoolModuleFilenameTemplate: 'file://[absolute-resource-path]',
     },
     resolve: {
       fallback: {
@@ -40,18 +40,13 @@ export function initWebpackConfig(
         buffer: false,
       },
     },
-    devtool: 'cheap-source-map',
+    devtool: 'nosources-cheap-source-map',
     cache: {
       type: 'filesystem',
       cacheDirectory: path.join(project.projectTempFolder, 'webpack-cache'),
     },
     module: {
       rules: [
-        {
-          test: /\.js$/,
-          enforce: 'pre',
-          loader: require.resolve('merge-source-map-loader'),
-        },
         {
           test: /\.(eot|ttf|woff|woff2|png|jpe?g|gif|svg|mp4|webm)(\?.*)?$/,
           loader: require.resolve('file-loader'),
@@ -115,10 +110,14 @@ export function initWebpackCompiler(
 export function spawnWebpackDevServer(
   project: MPackage,
   mode: BuildMode,
-  entry: string
+  entry: string,
+  preciseSourceMap: boolean
 ) {
   const isDevMode = mode === 'development';
-  const config = initWebpackConfig(project, Command.Watch, mode, entry);
+  const config = merge(
+    initWebpackConfig(project, Command.Watch, mode, entry),
+    preciseSourceMap ? getDevToolConfig() : {}
+  );
   const compiler = webpack(config);
   const server = new WebpackDevServer(compiler, {
     host: '0.0.0.0',

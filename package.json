@@ -36,6 +36,7 @@
     "webpack-node-externals": "^3.0.0"
   },
   "dependencies": {
+    "@ampproject/remapping": "^1.0.1",
     "@babel/core": "^7.14.5",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.4.3",
     "@rushstack/package-deps-hash": "^3.0.39",
@@ -59,7 +60,6 @@
     "ink-gradient": "^2.0.0",
     "ink-spinner": "^4.0.2",
     "ink-tab": "^4.1.0",
-    "merge-source-map-loader": "^0.0.0",
     "mini-css-extract-plugin": "^1.6.0",
     "node-sass": "^6.0.0",
     "p-limit": "^3.1.0",
@@ -67,7 +67,6 @@
     "react-refresh": "^0.10.0",
     "react-refresh-typescript": "^2.0.1",
     "sass-loader": "^12.1.0",
-    "source-map": "^0.7.3",
     "tinycolor2": "^1.4.2",
     "treat": "^2.0.4",
     "ts-react-display-name": "^1.2.2",
