@@ -13,6 +13,7 @@ import * as ReactRefreshWebpackPlugin from '@pmmmwh/react-refresh-webpack-plugin
 import * as WebpackDevServer from 'webpack-dev-server';
 import { Command } from '../../commands/typings';
 import { getDevToolConfig } from './devtoolConfig';
+import { verboseResolve } from '../../utils/verbose';
 
 const { inspect } = require('util');
 
@@ -49,7 +50,7 @@ export function initWebpackConfig(
       rules: [
         {
           test: /\.(eot|ttf|woff|woff2|png|jpe?g|gif|svg|mp4|webm)(\?.*)?$/,
-          loader: require.resolve('file-loader'),
+          loader: verboseResolve('file-loader'),
         },
       ],
     },

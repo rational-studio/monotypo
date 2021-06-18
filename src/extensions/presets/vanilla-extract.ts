@@ -2,6 +2,7 @@ import { Configuration } from 'webpack';
 import { Extension } from '../typings';
 import { VanillaExtractPlugin } from '@vanilla-extract/webpack-plugin';
 import MiniCssExtractPlugin = require('mini-css-extract-plugin');
+import { verboseResolve } from '../../utils/verbose';
 
 const vanillaExtractConfig: Configuration = {
   module: {
@@ -10,15 +11,15 @@ const vanillaExtractConfig: Configuration = {
         test: /\.js$/,
         exclude: /node_modules/,
         use: {
-          loader: require.resolve('babel-loader'),
+          loader: verboseResolve('babel-loader'),
           options: {
-            plugins: [require.resolve('@vanilla-extract/babel-plugin')],
+            plugins: [verboseResolve('@vanilla-extract/babel-plugin')],
           },
         },
       },
       {
         test: /\.css$/,
-        use: [MiniCssExtractPlugin.loader, require.resolve('css-loader')],
+        use: [MiniCssExtractPlugin.loader, verboseResolve('css-loader')],
       },
     ],
   },

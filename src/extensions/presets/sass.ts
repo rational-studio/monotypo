@@ -1,5 +1,6 @@
 import MiniCssExtractPlugin = require('mini-css-extract-plugin');
 import { Configuration } from 'webpack';
+import { verboseResolve } from '../../utils/verbose';
 import { Extension } from '../typings';
 
 function getSassLoaderConfig(production: boolean): Configuration {
@@ -20,7 +21,7 @@ function getSassLoaderConfig(production: boolean): Configuration {
               },
             },
             {
-              loader: require.resolve('css-loader'),
+              loader: verboseResolve('css-loader'),
               options: {
                 modules: {
                   namedExport: true,
@@ -40,7 +41,7 @@ function getSassLoaderConfig(production: boolean): Configuration {
             //   },
             // },
             {
-              loader: require.resolve('sass-loader'),
+              loader: verboseResolve('sass-loader'),
             },
           ],
         },
