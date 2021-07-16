@@ -50,7 +50,7 @@ export function initWebpackConfig(
       rules: [
         {
           test: /\.(eot|ttf|woff|woff2|png|jpe?g|gif|svg|mp4|webm)(\?.*)?$/,
-          loader: verboseResolve('file-loader'),
+          type: 'asset/resource',
         },
       ],
     },

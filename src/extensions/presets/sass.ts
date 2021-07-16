@@ -12,13 +12,6 @@ function getSassLoaderConfig(production: boolean): Configuration {
           use: [
             {
               loader: MiniCssExtractPlugin.loader,
-              options: {
-                esModule: true,
-                modules: {
-                  namedExport: true,
-                },
-                publicPath: '',
-              },
             },
             {
               loader: verboseResolve('css-loader'),
