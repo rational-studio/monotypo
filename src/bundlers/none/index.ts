@@ -3,9 +3,18 @@ import * as cpy from 'cpy';
 import { watch } from 'chokidar';
 import { MPackage } from '../../utils/MPackage';
 import * as path from 'path';
-import type { RawSourceMap } from 'source-map';
 import * as glob from 'glob';
 import * as fs from 'fs-extra';
+
+interface RawSourceMap {
+  version: number;
+  sources: string[];
+  names: string[];
+  sourceRoot?: string;
+  sourcesContent?: string[];
+  mappings: string;
+  file: string;
+}
 
 async function copyInterDist(project: MPackage) {
   try {

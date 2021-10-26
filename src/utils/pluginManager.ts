@@ -49,7 +49,7 @@ presetBundlers.forEach(bundler => pluginManager.registerBundler(bundler));
 
 // TODO: create a way to scan customised targets
 
-// Register preset extensions (sass, treat.js, etc.)
+// Register preset extensions (sass, vanilla-extract, etc.)
 presetExtensions.forEach(plugin => pluginManager.registerExtension(plugin));
 
 // TODO: create a way to scan customised extensions

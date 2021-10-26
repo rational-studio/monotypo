@@ -1,5 +1,3 @@
-import { sass } from './presets/sass';
-import { treat } from './presets/treat';
-import { vanillaExtract } from './presets/vanilla-extract';
+import { linaria } from './presets/linaria';
 
-export const presetExtensions = [sass, treat, vanillaExtract];
+export const presetExtensions = [linaria];

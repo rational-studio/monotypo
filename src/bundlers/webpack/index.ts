@@ -32,20 +32,12 @@ export const webpack: Bundler = {
     });
   },
   async watch(project, mode) {
-    return new Promise<void>((resolve, reject) => {
-      const server = spawnWebpackDevServer(
-        project,
-        mode,
-        path.join(project.interDistDir, 'index.js'),
-        false
-      );
-      server.listen(8080, error => {
-        if (!error) {
-          resolve();
-        } else {
-          reject(error);
-        }
-      });
-    });
+    const server = spawnWebpackDevServer(
+      project,
+      mode,
+      path.join(project.interDistDir, 'index.js'),
+      false
+    );
+    await server.start();
   },
 };

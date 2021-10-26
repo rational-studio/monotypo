@@ -2,7 +2,7 @@ import { MPackage } from './MPackage';
 import { parallelizeTasks } from './parallelism';
 import { getPackageInfo } from './workspace';
 import * as os from 'os';
-import * as pLimit from 'p-limit';
+import pLimit from 'p-limit';
 import { BuildMode } from './typings';
 
 const limit = pLimit(os.cpus().length);

@@ -83,7 +83,6 @@ export function initWebpackConfig(
 
   // TODO: Resolve this from m.config.json
   const sass = pluginManager.resolveExtension('sass', 'webpack');
-  const treat = pluginManager.resolveExtension('treat', 'webpack');
   const vanillaExtract = pluginManager.resolveExtension(
     'vanilla-extract',
     'webpack'
@@ -92,7 +91,6 @@ export function initWebpackConfig(
   const finalConfig = merge(
     initialConfig,
     sass.configs.webpack?.development ?? {},
-    treat.configs.webpack?.development ?? {},
     vanillaExtract.configs.webpack?.development ?? {}
   );
 
@@ -120,23 +118,25 @@ export function spawnWebpackDevServer(
     preciseSourceMap ? getDevToolConfig() : {}
   );
   const compiler = webpack(config);
-  const server = new WebpackDevServer(compiler, {
-    host: '0.0.0.0',
-    port: 8080,
-    proxy: {
-      '/api': {
-        target: process.env.BACKEND_PROXY,
-        pathRewrite: { '^/api': '' },
-        changeOrigin: true,
+  const server = new WebpackDevServer(
+    {
+      host: '0.0.0.0',
+      port: 8080,
+      proxy: {
+        '/api': {
+          target: process.env.BACKEND_PROXY,
+          pathRewrite: { '^/api': '' },
+          changeOrigin: true,
+        },
       },
+      allowedHosts: 'all',
+      https: process.env.HTTPS ? true : false,
+      historyApiFallback: {
+        verbose: true,
+      },
+      hot: isDevMode,
     },
-    disableHostCheck: true,
-    https: process.env.HTTPS ? true : false,
-    historyApiFallback: {
-      verbose: true,
-    },
-    hot: isDevMode,
-    noInfo: true,
-  });
+    compiler
+  );
   return server;
 }
