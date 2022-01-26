@@ -10,8 +10,8 @@ import { BuildMode } from '../../utils/typings';
 
 const base: CompilerOptions = {
   lib: ['lib.es2020.d.ts', 'lib.dom.d.ts'],
-  target: ScriptTarget.ES5,
-  module: ModuleKind.ES2015,
+  target: ScriptTarget.ES2020,
+  module: ModuleKind.ES2020,
   moduleResolution: ModuleResolutionKind.NodeJs,
   strict: true,
   stripInternal: true,
@@ -25,7 +25,7 @@ const base: CompilerOptions = {
 };
 
 const deltaDev: CompilerOptions = {
-  target: ScriptTarget.ES2020,
+  target: ScriptTarget.ESNext,
   declarationMap: true,
   incremental: true,
 };

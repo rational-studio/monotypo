@@ -48,11 +48,7 @@ if (isMainThread) {
       sourceRoot: projectSourceDir,
     });
 
-    const createProgram = isDevMode
-      ? ts.createIncrementalProgram
-      : ts.createProgram;
-
-    const program = createProgram({
+    const program = ts.createIncrementalProgram({
       rootNames: files,
       options: {
         ...tsconfigFunction(config),
@@ -73,7 +69,8 @@ if (isMainThread) {
       isDevMode
         ? {
             before: [
-              reactRefresh(),
+              // TODO: Add toggle for reactRefresh
+              // reactRefresh(),
               addDisplayNameTransformer({
                 classTypes: [],
                 factoryFuncs: [

@@ -8,11 +8,25 @@ function getLinariaLoaderConfig(production: boolean): Configuration {
     module: {
       rules: [
         {
+          test: /\.css$/,
+          use: [
+            {
+              loader: MiniCssExtractPlugin.loader,
+            },
+            {
+              loader: verboseResolve('css-loader'),
+              options: {
+                sourceMap: !production,
+              },
+            },
+          ],
+        },
+        {
           test: /\.js$/,
           exclude: /node_modules/,
           use: [
             {
-              loader: verboseResolve('@linaria-webpack/loader'),
+              loader: verboseResolve('@linaria/webpack-loader'),
               options: {
                 sourceMap: !production,
               },

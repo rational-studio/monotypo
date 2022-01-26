@@ -24,7 +24,7 @@ export function initWebpackConfig(
   entry: string
 ): webpack.Configuration {
   const isProduction = mode === 'production';
-  const applyFastRefresh = !isProduction && command === Command.Watch;
+  const applyFastRefresh = !isProduction && command === Command.Watch && false;
   const initialConfig: Configuration = {
     mode,
     stats: 'errors-warnings',
@@ -41,7 +41,7 @@ export function initWebpackConfig(
         buffer: false,
       },
     },
-    devtool: 'nosources-cheap-source-map',
+    devtool: 'cheap-source-map',
     cache: {
       type: 'filesystem',
       cacheDirectory: path.join(project.projectTempFolder, 'webpack-cache'),
@@ -77,21 +77,24 @@ export function initWebpackConfig(
           minifyJS: isProduction,
         },
       }),
+      new webpack.DefinePlugin({
+        'process.env.NODE_ENV': JSON.stringify(mode),
+        'process.env.SUMMIT_TEST_ANON': JSON.stringify(
+          process.env.SUMMIT_TEST_ANON
+        ),
+        'process.env.SUMMIT_TEST_URL': JSON.stringify(
+          process.env.SUMMIT_TEST_URL
+        ),
+      }),
       ...(applyFastRefresh ? [new ReactRefreshWebpackPlugin()] : []),
     ],
   };
 
   // TODO: Resolve this from m.config.json
-  const sass = pluginManager.resolveExtension('sass', 'webpack');
-  const vanillaExtract = pluginManager.resolveExtension(
-    'vanilla-extract',
-    'webpack'
-  );
-
+  const linaria = pluginManager.resolveExtension('linaria', 'webpack');
   const finalConfig = merge(
     initialConfig,
-    sass.configs.webpack?.development ?? {},
-    vanillaExtract.configs.webpack?.development ?? {}
+    linaria.configs.webpack?.development ?? {}
   );
 
   return finalConfig;
@@ -131,6 +134,12 @@ export function spawnWebpackDevServer(
       },
       allowedHosts: 'all',
       https: process.env.HTTPS ? true : false,
+      client: {
+        overlay: {
+          warnings: false,
+          errors: true,
+        },
+      },
       historyApiFallback: {
         verbose: true,
       },
